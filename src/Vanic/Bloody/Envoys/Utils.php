@@ -89,6 +89,6 @@ class Utils {
 				EconomyAPI::getInstance()->addMoney($player, $coins);
 			break;
 		}
-		$player->sendPopup(str_replace("{coins}", $coins, self::$main->getEnvoysConfig()->getNested("message.popup.claimed")));
+		$player->sendActionBarMessage(str_replace("{coins}", $coins, self::$main->getEnvoysConfig()->getNested("message.popup.claimed")));
 	}
 }
