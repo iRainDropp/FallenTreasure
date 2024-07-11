@@ -2,12 +2,11 @@
 
 namespace Vanic\Bloody\Envoys\Entity;
 
-
 use pocketmine\entity\Skin;
 use pocketmine\entity\Human;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
-use Vanic\Bloody\Envoys\Main;
+use pocketmine\world\particle\ExplodeParticle;
 use Vanic\Bloody\Envoys\Utils;
 use pocketmine\entity\Location;
 use pocketmine\world\ChunkLoader;
@@ -24,7 +23,7 @@ class Envoy extends Human implements ChunkLoader {
 	private array $coins = [];
 	private string $itemation;
   
-	public function __construct(Location $location, Skin $skin, ?CompoundTag $nbt = null, array $data) {
+	public function __construct(Location $location, Skin $skin, array $data, ?CompoundTag $nbt = null) {
 		$location->getWorld()->registerChunkLoader($this, $location->getFloorX() >> Chunk::COORD_BIT_SIZE, $location->getFloorZ() >> Chunk::COORD_BIT_SIZE, true);
 		$this->setCanSaveWithChunk(false);
 		parent::__construct($location, $skin, $nbt);
@@ -33,10 +32,10 @@ class Envoy extends Human implements ChunkLoader {
 		$this->setScale($this->tier * 0.3 + 1);
 		$this->progress = 10 * $this->tier;
 
-		$this->setImmobile();
+		//$this->setImmobile(); Not sure what this is but it crashes the server, that's all I do know.
 		$this->setNameTagAlwaysVisible();
-		$this->setNameTag("§f§l". $data["displayname"] ."\n§7Smash to open!");
-		$this->setScoreTag("§l§8(§7PROGRESS§8)§r\n" . Utils::createProgressBar($this->getProgress(), $this->getProgress()));
+		$this->setNameTag($data["displayname"] . "\n§7(Smash to Open!)");
+		$this->setScoreTag("§r\n" . Utils::createProgressBar($this->getProgress(), $this->getProgress()));
 		
 		//let's just keep it :>
 		$this->itemation = $data["itemation"];
@@ -49,6 +48,7 @@ class Envoy extends Human implements ChunkLoader {
 			if ($damager instanceof Player && $damager->isSurvival()) {
 				if ($this->getProgress() <= 0) {
 					for ($i = 0; $i < 20; $i++) {
+						$this->getWorld()->addParticle($this->getLocation(), new ExplodeParticle());
 						$this->getWorld()->addParticle($this->getLocation(), new HugeExplodeSeedParticle());
 						$gems = new AnimationEntity($this->getLocation(), $this->tier);
 						$gems->setMotion(new Vector3(lcg_value() * 0.5 - 0.1, 1, lcg_value() * 0.5 - 0.1));
@@ -60,8 +60,8 @@ class Envoy extends Human implements ChunkLoader {
 				}
 
 				$this->progress -= 1;
-				$this->setScoreTag("§l§8(§7PROGRESS§8)§r\n" . Utils::createProgressBar($this->progress, 10 * $this->tier));
-				$this->updateMovement();
+				$this->setScoreTag("§r\n" . Utils::createProgressBar($this->progress, 10 * $this->tier));
+				//$this->updateMovement();
 				
 				$gem = new AnimationEntity($this->getLocation(), $this->itemation);
 				for ($i = 0; $i < 5; $i++) {
