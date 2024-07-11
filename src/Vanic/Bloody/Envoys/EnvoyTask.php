@@ -19,8 +19,8 @@ class EnvoyTask extends Task {
 		$server = $plugin->getServer();
 		
 		$online = count($server->getOnlinePlayers());
-		if ($online === 0)
-			return;
+		//if ($online === 0)
+			//return;
 		
 		switch ($plugin->cooldown) {
 			case 30: case 20: case 10:
@@ -44,7 +44,7 @@ class EnvoyTask extends Task {
 
 					$envoys = $registered[$folder];
 					foreach($envoys as $i => $data) {
-						$envoy = new Envoy($data["location"], Utils::getEnvoySkin($data["texture"]), null, $data);
+						$envoy = new Envoy($data["location"], Utils::getEnvoySkin($data["texture"]), $data, null);
 						$envoy->spawnToAll();
 					}
 
