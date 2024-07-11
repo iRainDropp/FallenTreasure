@@ -1,17 +1,13 @@
 <?php
 
+<?php
+
 namespace Vanic\Bloody\Envoys;
 
 use pocketmine\world\World;
-use pocketmine\entity\Human;
 use pocketmine\utils\Config;
 use pocketmine\entity\Location;
 use pocketmine\plugin\PluginBase;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\entity\EntityFactory;
-use Vanic\Bloody\Envoys\Entity\Envoy;
-use pocketmine\entity\EntityDataHelper;
-use Vanic\Bloody\Envoys\Entity\AnimationEntity;
 
 class Main extends PluginBase {
   
